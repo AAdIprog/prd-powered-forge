@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+import LetterGlitch from "./components/LetterGlitch";
 import Contests from "./pages/Contests";
 import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/Leaderboard";
@@ -19,7 +20,15 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="min-h-screen w-full bg-background">
+        <div className="min-h-screen w-full bg-background relative">
+          <div className="absolute inset-0 -z-10">
+            <LetterGlitch
+              glitchSpeed={50}
+              centerVignette={true}
+              smooth={true}
+              glitchColors={["#2d0a4e", "#6a0dad", "#b07df0", "#ff7a00", "#ffb347"]}
+            />
+          </div>
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />

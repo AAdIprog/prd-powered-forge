@@ -3,9 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Trophy, Target, TrendingUp, Zap, ArrowRight } from "lucide-react";
 import LetterGlitch from "@/components/LetterGlitch";
+import PixelTransition from "@/components/ui/PixelTransition";
+import VariableProximity from "@/components/ui/VariableProximity";
+import ScrambledText from "@/components/ui/ScrambledText";
+import CountUp from "@/components/ui/CountUp";
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 
 const Home = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const upcomingContests = [
     {
       id: 1,
@@ -58,27 +64,71 @@ const Home = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 sm:py-32">
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 opacity-25 pointer-events-none">
           <LetterGlitch
-            glitchSpeed={80}
-            glitchColors={['#2b4539', '#61dca3', '#61b3dc']}
+            glitchSpeed={50}
+            centerVignette={true}
+            outerVignette={false}
             smooth={true}
+            glitchColors={["#2d0a4e", "#6a0dad", "#b07df0", "#ff7a00", "#ffb347"]}
           />
         </div>
-        <div className="container relative">
+        <div className="container relative" ref={containerRef}>
           <div className="mx-auto max-w-3xl text-center">
-            <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-              <Zap className="mr-1 h-3 w-3" />
-              Vedam School of Technology
-            </Badge>
+            <PixelTransition
+              style={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
+              firstContent={
+                <img
+                  src="/assets/cp.png"
+                  alt="default pixel transition content, a cat!"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              }
+              secondContent={
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "grid",
+                    placeItems: "center",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  <img
+                    src="/assets/vedam.ico"
+                    alt="Vedam School of Technology logo"
+                    style={{ width: "296px", height: "296px", backgroundColor: "transparent" }}
+                  />
+                  {/* <p style={{ fontWeight: 900, fontSize: "3rem", color: "#ffffff", marginTop: "0.75rem" }}>
+                    Meow!
+                  </p> */}
+                </div>
+              }
+              gridSize={35}
+              pixelColor="#eb7005"
+              animationStepDuration={0.3}
+              className="mx-auto custom-pixel-card -mt-6"
+            />
             <h1 className="mb-6 text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
-              Competitive Programming{" "}
-              <span className="bg-gradient-hero bg-clip-text text-transparent">Club</span>
+              <VariableProximity
+                label="Competitive Programming Club"
+                fromFontVariationSettings="'wght' 400, 'wdth' 100"
+                toFontVariationSettings="'wght' 900, 'wdth' 125"
+                containerRef={containerRef}
+                radius={150}
+                falloff="exponential"
+                className="bg-gradient-hero bg-clip-text text-transparent"
+              />
             </h1>
-            <p className="mb-8 text-lg text-muted-foreground sm:text-xl">
-              Master algorithms, compete globally, and track your progress across Codeforces, 
-              CodeChef, and AtCoder. Join our community of problem solvers.
-            </p>
+            <ScrambledText
+              radius={120}
+              duration={1.5}
+              speed={0.3}
+              scrambleChars="!@#$%^&*()_+-=[]{}|;:,.<>?"
+              className="mb-8 text-lg text-muted-foreground sm:text-xl max-w-none m-0 font-sans"
+            >
+              Master algorithms, compete globally, and track your progress across Codeforces, CodeChef, and AtCoder. Join our community of problem solvers.
+            </ScrambledText>
             <div className="flex flex-wrap justify-center gap-4">
               <Button size="lg" className="gap-2">
                 Get Started
@@ -93,10 +143,10 @@ const Home = () => {
           {/* Stats */}
           <div className="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { label: "Active Members", value: "250+", icon: Trophy },
-              { label: "Problems Solved", value: "12.5K+", icon: Target },
-              { label: "Contests Participated", value: "480+", icon: Calendar },
-              { label: "Avg Rating Gain", value: "+340", icon: TrendingUp },
+              { label: "Active Members", value: "250+", numericValue: 250, icon: Trophy },
+              { label: "Problems Solved", value: "12.5K+", numericValue: 12500, icon: Target },
+              { label: "Contests Participated", value: "480+", numericValue: 480, icon: Calendar },
+              { label: "Avg Rating Gain", value: "+340", numericValue: 340, icon: TrendingUp },
             ].map((stat) => (
               <Card key={stat.label} className="border-border/50 shadow-card">
                 <CardContent className="pt-6">
@@ -105,7 +155,18 @@ const Home = () => {
                       <stat.icon className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <div className="text-2xl font-bold">{stat.value}</div>
+                      <div className="text-2xl font-bold">
+                        {stat.label === "Avg Rating Gain" && "+"}
+                        <CountUp
+                          to={stat.numericValue}
+                          duration={2.5}
+                          delay={0.5}
+                          separator={stat.numericValue >= 1000 ? "," : ""}
+                        />
+                        {stat.label === "Active Members" && "+"}
+                        {stat.label === "Problems Solved" && "K+"}
+                        {stat.label === "Contests Participated" && "+"}
+                      </div>
                       <div className="text-sm text-muted-foreground">{stat.label}</div>
                     </div>
                   </div>
